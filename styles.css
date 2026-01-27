@@ -1,0 +1,135 @@
+/**
+ * 中英翻譯助手 - 浮動按鈕樣式
+ */
+
+/* 浮動按鈕基本樣式 */
+#translate-floating-btn {
+  position: absolute;
+  z-index: 2147483647; /* 最高層級 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  transition: all 0.2s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* 滑鼠懸停效果 */
+#translate-floating-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+/* 點擊效果 */
+#translate-floating-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+}
+
+/* 隱藏狀態 */
+#translate-floating-btn.translate-btn-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(0.8);
+}
+
+/* 顯示狀態 */
+#translate-floating-btn.translate-btn-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: scale(1);
+  animation: translateBtnFadeIn 0.2s ease;
+}
+
+/* 淡入動畫 */
+@keyframes translateBtnFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* 按鈕文字 */
+.translate-btn-text {
+  display: inline-block;
+}
+
+/* 載入動畫元素 */
+.translate-btn-loading {
+  display: none;
+  width: 16px;
+  height: 16px;
+  margin-left: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: translateBtnSpin 0.8s linear infinite;
+}
+
+/* 載入狀態 */
+#translate-floating-btn.translate-btn-loading-state .translate-btn-text {
+  display: none;
+}
+
+#translate-floating-btn.translate-btn-loading-state .translate-btn-loading {
+  display: inline-block;
+}
+
+#translate-floating-btn.translate-btn-loading-state {
+  padding: 8px 20px;
+  pointer-events: none;
+}
+
+/* 旋轉動畫 */
+@keyframes translateBtnSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 錯誤狀態 */
+#translate-floating-btn.translate-btn-error {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+  box-shadow: 0 4px 15px rgba(238, 90, 90, 0.4);
+}
+
+/* 成功提示動畫（可選） */
+@keyframes translateBtnSuccess {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* 深色模式支援 */
+@media (prefers-color-scheme: dark) {
+  #translate-floating-btn {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  #translate-floating-btn:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+}
