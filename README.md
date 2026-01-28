@@ -1,6 +1,10 @@
 # 中英翻譯助手 Chrome Extension
 
 一個輕量級的 Chrome 擴充功能，讓你在任何網頁的輸入框中選取中文文字後，一鍵翻譯成英文並直接替換。
+<img width="717" height="279" alt="image" src="https://github.com/user-attachments/assets/d87dfae1-4181-4421-8172-8cca52236aff" />
+<img width="730" height="345" alt="image" src="https://github.com/user-attachments/assets/a777ae9a-383a-4dc6-ab70-86d0e3502f2a" />
+
+
 
 ## 功能特色
 
