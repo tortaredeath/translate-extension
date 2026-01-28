@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中英翻譯助手</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- 頁籤 -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="stats">📊 統計</button>
+      <button class="tab-btn" data-tab="vocabulary">📖 單字本</button>
+    </div>
+
+    <!-- 統計頁面 -->
+    <div id="stats-tab" class="tab-content active">
+      <div class="stats-card">
+        <div class="stats-label">本月翻譯</div>
+        <div class="stats-number" id="total-chars">0</div>
+        <div class="stats-unit">字</div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stats-item">
+          <span class="stats-item-label">翻譯次數</span>
+          <span class="stats-item-value" id="total-count">0</span>
+          <span class="stats-item-unit">次</span>
+        </div>
+      </div>
+
+      <div class="stats-footer">
+        <span id="current-month">📅 2026 年 1 月</span>
+      </div>
+    </div>
+
+    <!-- 單字本頁面 -->
+    <div id="vocabulary-tab" class="tab-content">
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="🔍 搜尋單字...">
+      </div>
+
+      <div class="vocabulary-list" id="vocabulary-list">
+        <!-- 單字項目會由 JS 動態產生 -->
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon">📚</div>
+          <div class="empty-text">還沒有收藏任何單字</div>
+          <div class="empty-hint">翻譯後點擊「+ 收藏」加入單字本</div>
+        </div>
+      </div>
+
+      <div class="vocabulary-footer">
+        <span class="word-count">共 <span id="word-count">0</span> 個單字</span>
+        <div class="footer-actions">
+          <button class="btn-secondary" id="export-btn" title="匯出">📤</button>
+          <button class="btn-danger" id="clear-btn" title="清空">🗑️</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

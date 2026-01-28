@@ -1,0 +1,332 @@
+/**
+ * 中英翻譯助手 - Popup 樣式
+ * 橘色主題
+ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+  background: #fff;
+}
+
+.popup-container {
+  width: 320px;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==================== 頁籤 ==================== */
+
+.tabs {
+  display: flex;
+  border-bottom: 2px solid #f0f0f0;
+  background: #fafafa;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.tab-btn:hover {
+  color: #f7931e;
+  background: #fff5eb;
+}
+
+.tab-btn.active {
+  color: #f7931e;
+  background: #fff;
+}
+
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(135deg, #f7931e 0%, #f15a24 100%);
+}
+
+/* ==================== 頁面內容 ==================== */
+
+.tab-content {
+  display: none;
+  flex: 1;
+  padding: 16px;
+  flex-direction: column;
+}
+
+.tab-content.active {
+  display: flex;
+}
+
+/* ==================== 統計頁面 ==================== */
+
+.stats-card {
+  background: linear-gradient(135deg, #f7931e 0%, #f15a24 100%);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  color: white;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 15px rgba(247, 147, 30, 0.3);
+}
+
+.stats-label {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 8px;
+}
+
+.stats-number {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stats-unit {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.stats-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stats-item {
+  flex: 1;
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.stats-item-label {
+  display: block;
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.stats-item-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: #f7931e;
+}
+
+.stats-item-unit {
+  font-size: 12px;
+  color: #888;
+  margin-left: 2px;
+}
+
+.stats-footer {
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+/* ==================== 單字本頁面 ==================== */
+
+.search-box {
+  margin-bottom: 12px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-box input:focus {
+  border-color: #f7931e;
+}
+
+.vocabulary-list {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 240px;
+  margin-bottom: 12px;
+}
+
+.word-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: #f9f9f9;
+  transition: background 0.2s;
+}
+
+.word-item:hover {
+  background: #fff5eb;
+}
+
+.word-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.word-en {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.word-zh {
+  font-size: 12px;
+  color: #666;
+}
+
+.word-delete {
+  padding: 6px 8px;
+  border: none;
+  background: transparent;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.word-delete:hover {
+  background: #ffe0e0;
+  color: #e74c3c;
+}
+
+/* 空狀態 */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+}
+
+.empty-state.hidden {
+  display: none;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.empty-text {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.empty-hint {
+  font-size: 12px;
+  color: #bbb;
+}
+
+/* 底部 */
+.vocabulary-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.word-count {
+  font-size: 12px;
+  color: #888;
+}
+
+.footer-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-secondary,
+.btn-danger {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.btn-secondary {
+  background: #f0f0f0;
+  color: #666;
+}
+
+.btn-secondary:hover {
+  background: #e0e0e0;
+}
+
+.btn-danger {
+  background: #fff0f0;
+  color: #e74c3c;
+}
+
+.btn-danger:hover {
+  background: #ffe0e0;
+}
+
+/* ==================== 滾動條 ==================== */
+
+.vocabulary-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.vocabulary-list::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 3px;
+}
+
+.vocabulary-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.vocabulary-list::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
+
+/* ==================== 動畫 ==================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.word-item {
+  animation: fadeIn 0.2s ease;
+}
