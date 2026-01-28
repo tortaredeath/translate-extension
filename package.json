@@ -1,0 +1,43 @@
+{
+  "name": "translate-extension",
+  "version": "2.0.2",
+  "type": "module",
+  "description": "中英翻譯助手 Chrome Extension",
+  "scripts": {
+    "build": "rollup -c && npm run copy-assets",
+    "build:watch": "rollup -c -w",
+    "copy-assets": "cp popup.html popup.css styles.css dist/ && cp -r icons dist/ && npm run update-manifest",
+    "update-manifest": "node scripts/update-manifest.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "prebuild": "npm test"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "rollup": "^4.9.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "roots": [
+      "<rootDir>/tests"
+    ],
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "testMatch": [
+      "**/*.test.js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup.js"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/**/*.test.js"
+    ],
+    "coverageDirectory": "coverage",
+    "verbose": true
+  }
+}

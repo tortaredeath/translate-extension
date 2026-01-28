@@ -20,6 +20,12 @@ node_modules/
 dist/
 build/
 
+# Test coverage
+coverage/
+
+# Package lock
+package-lock.json
+
 # Temporary files
 *.tmp
 *.log

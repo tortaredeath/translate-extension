@@ -1,0 +1,218 @@
+/**
+ * 文字處理模組
+ * 包含中文檢測、文字提取、翻譯重組等功能
+ */
+
+// 配置
+const CONFIG = {
+  // 支援的 input types
+  supportedInputTypes: ['text', 'search', 'email', 'url', 'tel', 'password', 'number', ''],
+  // 中文檢測正則
+  chineseRegex: /[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff\u3000-\u303f\uff00-\uffef]/
+};
+
+/**
+ * 檢查文字是否包含中文
+ * @param {string} text
+ * @returns {boolean}
+ */
+function containsChinese(text) {
+  if (!text || typeof text !== 'string') return false;
+  return CONFIG.chineseRegex.test(text);
+}
+
+/**
+ * 檢查是否為支援的輸入類型
+ * @param {string} type
+ * @returns {boolean}
+ */
+function isSupportedInputType(type) {
+  const normalizedType = (type || 'text').toLowerCase();
+  return CONFIG.supportedInputTypes.includes(normalizedType);
+}
+
+/**
+ * 從文字中提取需要翻譯的部分，保留 emoji、符號、URL 等
+ * @param {string} text
+ * @returns {Object}
+ */
+function extractTranslatableText(text) {
+  if (!text || typeof text !== 'string') {
+    return {
+      segments: [],
+      lineInfos: [],
+      textToTranslate: '',
+      separator: '\n',
+      lineSeparator: null
+    };
+  }
+
+  // 正則表達式匹配需要保留的部分
+  const preservePatterns = [
+    // Emoji
+    /[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F000}-\u{1F02F}]|[\u{1F0A0}-\u{1F0FF}]|[\u{2300}-\u{23FF}]|[\u{2B50}]|[\u{1FA00}-\u{1FAFF}]/gu,
+    // URL
+    /https?:\/\/[^\s]+/g,
+    // 項目符號
+    /^[\s]*[•\-\*\→\›\»\◦\▪\▫\●\○\◉\◎\★\☆\✓\✔\✕\✖\✗\✘\➤\➜\➡\⟶\🔹\🔸\🔷\🔶\💠\♦\♢◆◇]+[\s]*/gm,
+    // 數字列表
+    /^[\s]*\d+[\.、\)]\s*/gm,
+    // 程式碼區塊
+    /```[\s\S]*?```/g,
+    // 行內程式碼
+    /`[^`]+`/g
+  ];
+
+  const segments = [];
+
+  // 找出所有需要保留的部分
+  const preserveRanges = [];
+
+  for (const pattern of preservePatterns) {
+    pattern.lastIndex = 0;
+    let match;
+    while ((match = pattern.exec(text)) !== null) {
+      preserveRanges.push({
+        start: match.index,
+        end: match.index + match[0].length,
+        content: match[0]
+      });
+    }
+  }
+
+  // 排序並合併重疊的範圍
+  preserveRanges.sort((a, b) => a.start - b.start);
+  const mergedRanges = [];
+  for (const range of preserveRanges) {
+    if (mergedRanges.length === 0 || range.start > mergedRanges[mergedRanges.length - 1].end) {
+      mergedRanges.push({ ...range });
+    } else {
+      mergedRanges[mergedRanges.length - 1].end = Math.max(
+        mergedRanges[mergedRanges.length - 1].end,
+        range.end
+      );
+      mergedRanges[mergedRanges.length - 1].content = text.substring(
+        mergedRanges[mergedRanges.length - 1].start,
+        mergedRanges[mergedRanges.length - 1].end
+      );
+    }
+  }
+
+  // 建立分段
+  let currentPos = 0;
+  for (const range of mergedRanges) {
+    if (currentPos < range.start) {
+      const textPart = text.substring(currentPos, range.start);
+      if (textPart.trim()) {
+        segments.push({ type: 'text', content: textPart });
+      } else if (textPart) {
+        segments.push({ type: 'preserve', content: textPart });
+      }
+    }
+    segments.push({ type: 'preserve', content: range.content });
+    currentPos = range.end;
+  }
+
+  if (currentPos < text.length) {
+    const textPart = text.substring(currentPos);
+    if (textPart.trim()) {
+      segments.push({ type: 'text', content: textPart });
+    } else if (textPart) {
+      segments.push({ type: 'preserve', content: textPart });
+    }
+  }
+
+  if (segments.length === 0) {
+    segments.push({ type: 'text', content: text });
+  }
+
+  // 按行分割
+  const lines = text.split('\n');
+  const lineInfos = lines.map(line => {
+    const bulletMatch = line.match(/^([\s]*[•\-\*\→\›\»\◦\▪\▫\●\○\◉\◎\★\☆\✓\✔\✕\✖\✗\✘\➤\➜\➡\⟶\🔹\🔸\🔷\🔶\💠\♦\♢◆◇]+[\s]*)/);
+    const numberMatch = line.match(/^([\s]*\d+[\.、\)]\s*)/);
+
+    let prefix = '';
+    let content = line;
+
+    if (bulletMatch) {
+      prefix = bulletMatch[1];
+      content = line.substring(prefix.length);
+    } else if (numberMatch) {
+      prefix = numberMatch[1];
+      content = line.substring(prefix.length);
+    }
+
+    return { prefix, content, original: line, hasContent: content.trim().length > 0 };
+  });
+
+  const textsToTranslate = lineInfos
+    .filter(info => info.hasContent)
+    .map(info => info.content);
+
+  return {
+    segments,
+    lineInfos,
+    textToTranslate: textsToTranslate.join('\n'),
+    separator: '\n',
+    lineSeparator: null
+  };
+}
+
+/**
+ * 將翻譯結果重組回原始格式
+ * @param {Array} segments
+ * @param {string} translatedText
+ * @param {string} separator
+ * @param {*} lineSeparator
+ * @param {Array} lineInfos
+ * @returns {string}
+ */
+function reassembleTranslation(segments, translatedText, separator, lineSeparator, lineInfos) {
+  if (!translatedText) return '';
+
+  if (lineInfos && lineInfos.length > 0) {
+    const translatedParts = translatedText.split('\n');
+    let translatedIndex = 0;
+
+    const resultLines = lineInfos.map((info) => {
+      if (info.hasContent) {
+        if (translatedIndex < translatedParts.length) {
+          const translated = translatedParts[translatedIndex].trim();
+          translatedIndex++;
+          return info.prefix + translated;
+        } else {
+          return info.original;
+        }
+      } else {
+        return info.original;
+      }
+    });
+
+    return resultLines.join('\n');
+  }
+
+  // 舊邏輯（備用）
+  const translatedParts = translatedText.split(separator);
+  let translatedIndex = 0;
+
+  const result = segments.map(segment => {
+    if (segment.type === 'text' && translatedIndex < translatedParts.length) {
+      return translatedParts[translatedIndex++].trim();
+    }
+    return segment.content;
+  });
+
+  return result.join('');
+}
+
+// 根據環境決定匯出方式
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    CONFIG,
+    containsChinese,
+    isSupportedInputType,
+    extractTranslatableText,
+    reassembleTranslation
+  };
+}
